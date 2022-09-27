@@ -100,7 +100,20 @@ public class TaskRepository : ITaskRepository
         var task = _context.tasks.Include(t => t.AssignedToName).FirstOrDefault(t => t.Id == taskId);
 
         Response response;
-        
+
+        if (task is null) {
+            response = NotFound;
+        }
+        else if (task.AssignedToName.Any()) {
+            response = Conflict;
+        }
+        else {
+            _context.tasks.Remove(task);
+            _context.SaveChanges();
+
+            response = Deleted;
+        }
+        return response;
     }
 
 }
