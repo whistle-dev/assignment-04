@@ -2,16 +2,17 @@ namespace Assignment3.Entities;
 
 public class Tag
 {   
-    public int id {get; set;}
+    public int Id {get; set;}
     [StringLength(50)]
     [Required]
-    public string? name {get; set;}
-    public virtual ICollection<Task> tasks {get; set;}
+    public string? Name {get; set;}
+    public virtual ICollection<Task> Tasks {get; set;}
     
     
-    public Tag()
+    public Tag(String name)
     {
-        this.tasks = new HashSet<Task>();
+        this.Tasks = new HashSet<Task>();
+        Name = name;
     }
     
 

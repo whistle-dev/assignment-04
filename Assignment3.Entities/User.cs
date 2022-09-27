@@ -2,14 +2,18 @@ namespace Assignment3.Entities;
 
 public class User
 {
-    public int id {get; set;}
+    public int Id { get; set; }
     [StringLength(100)]
     [Required]
-    public string? name {get; set;}
+    public string? Name { get; set; }
     [StringLength(100)]
     [Required]
-    public string? email {get; set;}
+    public string? Email { get; set; }
 
-    public Task[] tasks;
+    public Task[] Tasks;
 
+    public User()
+    {
+        Tasks = new Task[0];
+    }
 }

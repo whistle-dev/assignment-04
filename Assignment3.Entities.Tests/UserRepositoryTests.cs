@@ -1,5 +1,29 @@
 namespace Assignment3.Entities.Tests;
 
-public class UserRepositoryTests
+
+public class UserRepositoryTests : IDisposable
 {
+
+    private readonly KanbanContext _context;
+    private readonly UserRepository _repository;
+     public UserRepositoryTests()
+    {
+
+        var connection = new SqliteConnection("Filename=:memory:");
+        connection.Open();
+        var builder = new DbContextOptionsBuilder<KanbanContext>();
+        builder.UseSqlite(connection);
+        var context = new KanbanContext(builder.Options);
+        context.users.Add(new User { Id = 1, Name = "Test", Email = "Test@test.dk" });
+        context.SaveChanges();
+
+        
+        context.Database.EnsureCreated();
+        _context = context;
+        _repository = new UserRepository(_context);
+
+    }
+
+
+
 }
