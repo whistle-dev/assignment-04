@@ -21,15 +21,21 @@ public class Task
     {
         this.Tags = new HashSet<Tag>();
     }
+
+    public Task(string title)
+    {
+        this.Tags = new HashSet<Tag>();
+        Title = title;
+    }
 }
 
-public enum State
-{
-    New,
-    Active,
-    Resolved,
-    Closed,
-    Removed
-}
+// public enum State
+// {
+//     New,
+//     Active,
+//     Resolved,
+//     Closed,
+//     Removed
+// }
 
 

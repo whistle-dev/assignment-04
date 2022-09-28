@@ -14,7 +14,10 @@ public class UserRepositoryTests : IDisposable
         var builder = new DbContextOptionsBuilder<KanbanContext>();
         builder.UseSqlite(connection);
         var context = new KanbanContext(builder.Options);
-        context.users.Add(new User { Id = 1, Name = "Test", Email = "Test@test.dk" });
+        context.users.Add(new User { 
+                                    Id = 1, 
+                                    Name = "Test", 
+                                    Email = "Test@test.dk" });
         context.SaveChanges();
 
         

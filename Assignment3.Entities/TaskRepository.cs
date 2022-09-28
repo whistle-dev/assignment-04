@@ -9,7 +9,7 @@ public class TaskRepository : ITaskRepository
         _context = context;
     }
 
-    (Response Response, int TaskId) Create(TaskCreateDTO task) {
+    public (Response Response, int TaskId) Create(TaskCreateDTO task) {
         var entity = _context.tasks.FirstOrDefault(t => t.Title == task.Title);
         
         Response response;
@@ -29,7 +29,7 @@ public class TaskRepository : ITaskRepository
        
        return (response, created);
     }
-    IReadOnlyCollection<TaskDTO> ReadAll() {
+    public IReadOnlyCollection<TaskDTO> ReadAll() {
        //return _context.tasks.Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
 
         var tasks = from t in _context.tasks
@@ -40,7 +40,7 @@ public class TaskRepository : ITaskRepository
         
     }
 
-    TaskDetailsDTO Read(int taskId) {
+    public TaskDetailsDTO Read(int taskId) {
         var entity = _context.tasks.FirstOrDefault(t => t.Id == taskId);
 
         if (entity is null) {
@@ -50,35 +50,36 @@ public class TaskRepository : ITaskRepository
         return new TaskDetailsDTO(entity.Id, entity.Title, entity.Description, entity.AssignedToName, entity.Tags, entity.State, entity.Created, entity.Updated);
     }
 
-    IReadOnlyCollection<TaskDTO> ReadAllRemoved() {
-        var tasks = from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllRemoved() {
+        return from t in _context.tasks
                    where t.State == State.Removed
                    orderby t.Title
                    select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
         
         //return _context.tasks.Where(t => t.State == State.Removed).Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
     }
-    IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag) {
-        var tasks = from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag) {
+        return from t in _context.tasks
                     where t.Tags.Contains(tag)
                     orderby t.Title
                     select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
     }
 
-    IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId) {
-        var tasks = from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId) {
+       return from t in _context.tasks
                     where t.Id == userId
                     orderby t.Title
                     select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
     }
-    IReadOnlyCollection<TaskDTO> ReadAllByState(State state) {
-        var tasks = from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllByState(State state) {
+       return from t in _context.tasks
                     where t.State == state
                     orderby t.Title
                     select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+        
     }
     
-    Response Update(TaskUpdateDTO task) {
+    public Response Update(TaskUpdateDTO task) {
         var entity = _context.tasks.FirstOrDefault(t => t.Id == task.Id);
         Response response;
 
@@ -96,7 +97,7 @@ public class TaskRepository : ITaskRepository
         }
         return response;
     }
-    Response Delete(int taskId) {
+    public Response Delete(int taskId) {
         var task = _context.tasks.Include(t => t.AssignedToName).FirstOrDefault(t => t.Id == taskId);
 
         Response response;
