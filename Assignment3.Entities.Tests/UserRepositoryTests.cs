@@ -27,6 +27,26 @@ public class UserRepositoryTests : IDisposable
 
     }
 
+    public void Dispose()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
+
+    //test UserRepository.cs with fluent assertions
+    [Fact]
+    public void CreateUser()
+    {
+        var user = new UserCreateDTO("Test1", "test@test.dk");
+        _repository.Create(user);
+        _context.users.Should().Be(Response.Created);
+    }
+
+
+
+
+
+
 
 
 }

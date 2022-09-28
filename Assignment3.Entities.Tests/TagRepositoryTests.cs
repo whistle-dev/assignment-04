@@ -19,7 +19,7 @@ public sealed class TagRepositoryTests
         context.tasks.Add(new Task
                           {
                           Id = 1, 
-                          Created = DateTime.Now, 
+                          Created = DateTime.Now,
                           AssignedToName = "High", 
                           Title = "Make", 
                           State = State.New, 
@@ -38,13 +38,25 @@ public sealed class TagRepositoryTests
     {
         
         var (response, tagId) = _repository.Create(new TagCreateDTO("Medium"));
-
-        //response.Should().Be(Response.Created);
         
         
         Assert.Equal(Response.Created, response);
         Assert.Equal(3, tagId);
-        //tagId.Should().Be(3);
     }
 
+    [Fact]
+    public void Create_given_existing_Tag_returns_Conflict()
+    {
+        var (response, tagId) = _repository.Create(new TagCreateDTO("High"));
+        Assert.Equal(Response.Conflict, response);
+        Assert.Equal(0, tagId);
+    }
+
+    [Fact]
+    public void Read_given_existing_id_returns_Tag()
+    {
+        var (response, tag) = _repository.Read(1);
+        Assert.Equal(Response.Found, response);
+        Assert.Equal("High", tag.Name);
+    }
 }

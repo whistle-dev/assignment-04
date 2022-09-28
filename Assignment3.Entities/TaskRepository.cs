@@ -24,10 +24,8 @@ public class TaskRepository : ITaskRepository
        } else {
             response = Response.Conflict;
         } 
-
-        var created = new TaskDTO(entity.Id, entity.Title, entity.AssignedToName, entity.Tags, entity.State);
        
-       return (response, created);
+       return (response, entity.Id);
     }
     public IReadOnlyCollection<TaskDTO> ReadAll() {
        //return _context.tasks.Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
@@ -54,7 +52,7 @@ public class TaskRepository : ITaskRepository
         return from t in _context.tasks
                    where t.State == State.Removed
                    orderby t.Title
-                   select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+                   select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags., t.State);
         
         //return _context.tasks.Where(t => t.State == State.Removed).Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
     }
