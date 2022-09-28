@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 namespace Assignment3.Entities.Tests;
 
 public sealed class TagRepositoryTests
@@ -34,11 +36,15 @@ public sealed class TagRepositoryTests
     [Fact]
     public void Create_given_Tag_returns_Created_with_Tag()
     {
+        
         var (response, tagId) = _repository.Create(new TagCreateDTO("Medium"));
 
-        response.Should().Be(Response.Created);
+        //response.Should().Be(Response.Created);
         
-        tagId.Should().Be(3);
+        
+        Assert.Equal(Response.Created, response);
+        Assert.Equal(3, tagId);
+        //tagId.Should().Be(3);
     }
 
 }
