@@ -112,7 +112,10 @@ public class TaskRepository : ITaskRepository
         {
             response = NotFound;
         }
-        
+        else if (_context.users.Find(task.AssignedToId) == null)
+        {
+            response = BadRequest;
+        }
         else if (_context.tasks.FirstOrDefault(t => t.Title == task.Title && t.Id != task.Id ) != null) 
         {
             response = Conflict;
@@ -129,8 +132,7 @@ public class TaskRepository : ITaskRepository
     }
     public Response Delete(int taskId) 
     {
-        var task = _context.tasks.Include(t => t.AssignedToName).FirstOrDefault(t => t.Id == taskId);
-
+        var task = _context.tasks.Find(taskId);
         Response response = NotFound;
 
         if (task is null){

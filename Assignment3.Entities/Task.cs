@@ -6,7 +6,7 @@ public class Task
     public int Id {get; set; }
     public DateTime Created;
 
-    public string AssignedToName {get; set;}
+    public string? AssignedToName {get; set;}
     public DateTime StateUpdated;
     [StringLength(100)]
     [Required]
