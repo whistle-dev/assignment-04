@@ -1,6 +1,6 @@
 namespace Assignment3.Entities.Tests;
 
-public class TaskRepositoryTests : IDisposable
+public class TaskRepositoryTests
 {
     private readonly KanbanContext _context;
     private readonly TaskRepository _repository;
@@ -12,16 +12,12 @@ public class TaskRepositoryTests : IDisposable
         var builder = new DbContextOptionsBuilder<KanbanContext>();
         builder.UseSqlite(connection);
         var context = new KanbanContext(builder.Options);
-        context.tasks.Add(new Task { Id = 1, Title = "Test", State = State.Active });
-        context.SaveChanges();
         context.Database.EnsureCreated();
+        context.tasks.Add(new Task { Id = 1, Title = "Task 1", Description = "Description 1", Created = DateTime.Now, State = State.New });
+        context.SaveChanges();
+
         _context = context;
         _repository = new TaskRepository(_context);
     }
 
-    public void Dispose()
-    {
-        _context.Database.EnsureDeleted();
-        _context.Dispose();
-    }
 }

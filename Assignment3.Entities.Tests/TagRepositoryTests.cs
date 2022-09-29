@@ -15,17 +15,17 @@ public sealed class TagRepositoryTests
         builder.UseSqlite(connection);
         var context = new KanbanContext(builder.Options);
         context.Database.EnsureCreated();
-        context.tags.AddRange(new Tag("High") { Id = 1}, new Tag("Low") { Id = 2});
+        context.tags.AddRange(new Tag("High") { Id = 1 }, new Tag("Low") { Id = 2 });
         context.tasks.Add(new Task
-                          {
-                          Id = 1, 
-                          Created = DateTime.Now,
-                          AssignedToName = "High", 
-                          Title = "Make", 
-                          State = State.New, 
-                          Description = "Make a new program", 
-                          Tags = context.tags.ToArray()
-                          });
+        {
+            Id = 1,
+            Created = DateTime.Now,
+            AssignedToName = "High",
+            Title = "Make",
+            State = State.New,
+            Description = "Make a new program",
+            Tags = context.tags.ToArray()
+        });
         context.SaveChanges();
 
         _context = context;
@@ -36,10 +36,10 @@ public sealed class TagRepositoryTests
     [Fact]
     public void Create_given_Tag_returns_Created_with_Tag()
     {
-        
+
         var (response, tagId) = _repository.Create(new TagCreateDTO("Medium"));
-        
-        
+
+
         Assert.Equal(Response.Created, response);
         Assert.Equal(3, tagId);
     }
@@ -49,14 +49,28 @@ public sealed class TagRepositoryTests
     {
         var (response, tagId) = _repository.Create(new TagCreateDTO("High"));
         Assert.Equal(Response.Conflict, response);
-        Assert.Equal(0, tagId);
+
+    }
+
+    [Fact]
+    public void Find_given_non_existing_id_returns_null()
+    {
+        var tag = _repository.Read(42);
+        Assert.Null(tag);
     }
 
     [Fact]
     public void Read_given_existing_id_returns_Tag()
     {
-        var (response, tag) = _repository.Read(1);
-        Assert.Equal(Response.Found, response);
+        var tag = _repository.Read(1);
         Assert.Equal("High", tag.Name);
     }
+
+    [Fact]
+    public void ReadAll_given_existing_id_returns_Tag()
+    {
+        var tags = _repository.ReadAll();
+        Assert.Equal(2, tags.Count());
+    }
+
 }

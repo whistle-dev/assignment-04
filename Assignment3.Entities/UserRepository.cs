@@ -12,7 +12,7 @@ public sealed class UserRepository : IUserRepository
 
     public (Response Response, int UserId) Create(UserCreateDTO user)
     {
-        var entity = _context.users.FirstOrDefault(u => u.Name == user.Name);
+        var entity = _context.users.FirstOrDefault(u => u.Email == user.Email);
         Response response;
 
         if (entity is null)
@@ -71,20 +71,23 @@ public sealed class UserRepository : IUserRepository
     {
         var entity = _context.users.FirstOrDefault(u => u.Id == userId);
 
+
         if (entity is null)
         {
             return Response.NotFound;
         }
 
-        if (force)
+        if (force && entity.Tasks.Any())
         {
             _context.users.Remove(entity);
+        }
+        else if (!force && entity.Tasks.Any())
+        {
+            return Response.Conflict;
         }
 
         _context.SaveChanges();
 
         return Response.Deleted;
     }
-
-
 }

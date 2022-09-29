@@ -7,7 +7,7 @@ public class Task
     public DateTime Created;
 
     public string AssignedToName {get; set;}
-    //public DateTime StateUpdated;
+    public DateTime StateUpdated;
     [StringLength(100)]
     [Required]
     public string? Title{get; set;}
@@ -29,13 +29,5 @@ public class Task
     }
 }
 
-// public enum State
-// {
-//     New,
-//     Active,
-//     Resolved,
-//     Closed,
-//     Removed
-// }
 
 
