@@ -49,14 +49,13 @@ public sealed class TagRepositoryTests
     {
         var (response, tagId) = _repository.Create(new TagCreateDTO("High"));
         Assert.Equal(Response.Conflict, response);
-        Assert.Equal(0, tagId);
+        
     }
 
     [Fact]
-    public void Read_given_existing_id_returns_Tag()
+    public void Find_given_non_existing_id_returns_null()
     {
-        var (response, tag) = _repository.Read(1);
-        Assert.Equal(Response.Found, response);
-        Assert.Equal("High", tag.Name);
+        var tag = _repository.Read(42);
+        Assert.Null(tag);
     }
 }

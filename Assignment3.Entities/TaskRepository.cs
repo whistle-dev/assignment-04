@@ -9,110 +9,149 @@ public class TaskRepository : ITaskRepository
         _context = context;
     }
 
-    public (Response Response, int TaskId) Create(TaskCreateDTO task) {
+    public (Response Response, int TaskId) Create(TaskCreateDTO task) 
+    {   
         var entity = _context.tasks.FirstOrDefault(t => t.Title == task.Title);
         
         Response response;
 
-       if (entity is null) {
+        
+
+       if (entity is null) 
+       {
             entity = new Task(task.Title);
+
+            entity.State = State.New;
+            entity.Created = DateTime.UtcNow;
+            entity.StateUpdated = DateTime.UtcNow;
 
             _context.tasks.Add(entity);
             _context.SaveChanges();
-
+            
             response = Response.Created;
-       } else {
+       } 
+       else 
+       {
             response = Response.Conflict;
-        } 
-       
+       } 
+
+       if (task.AssignedToId == null)
+        {
+            response = Response.BadRequest;
+        }
+
        return (response, entity.Id);
     }
-    public IReadOnlyCollection<TaskDTO> ReadAll() {
-       //return _context.tasks.Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
-
+    public IReadOnlyCollection<TaskDTO> ReadAll() 
+    {        
+                            
         var tasks = from t in _context.tasks
                    orderby t.Title
-                   select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+                   select new TaskDTO(t.Id, (t.Title != null ? t.Title : ""), t.AssignedToName, t.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), t.State);
 
         return tasks.ToArray();
         
     }
 
-    public TaskDetailsDTO Read(int taskId) {
+    public TaskDetailsDTO Read(int taskId) 
+    {
         var entity = _context.tasks.FirstOrDefault(t => t.Id == taskId);
 
         if (entity is null) {
             return null;
         }
 
-        return new TaskDetailsDTO(entity.Id, entity.Title, entity.Description, entity.AssignedToName, entity.Tags, entity.State, entity.Created, entity.Updated);
+        return new TaskDetailsDTO(entity.Id, (entity.Title != null ? entity.Title : ""), (entity.Description != null ? entity.Description : ""), entity.Created, entity.AssignedToName, entity.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), entity.State, entity.StateUpdated);
     }
 
-    public IReadOnlyCollection<TaskDTO> ReadAllRemoved() {
-        return from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllRemoved() 
+    {
+        return (from t in _context.tasks
                    where t.State == State.Removed
                    orderby t.Title
-                   select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags., t.State);
+                   select new TaskDTO(t.Id, (t.Title != null ? t.Title : ""), t.AssignedToName, t.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), t.State)).ToArray();
         
-        //return _context.tasks.Where(t => t.State == State.Removed).Select(u => new TaskDTO(u.Id, u.Title, u.AssignedToName, u.Tags, u.State)).ToList();
     }
-    public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag) {
-        return from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tagName) 
+    {
+        Tag tag = (Tag)(from t in _context.tags
+                   where t.Name != null && t.Name == tagName
+                   select t);
+                   
+        
+        return (from t in _context.tasks
                     where t.Tags.Contains(tag)
                     orderby t.Title
-                    select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+                    select new TaskDTO(t.Id, (t.Title != null ? t.Title : ""), t.AssignedToName, t.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), t.State)).ToArray();
     }
 
-    public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId) {
-       return from t in _context.tasks
+    public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId) 
+    {
+       return (from t in _context.tasks
                     where t.Id == userId
                     orderby t.Title
-                    select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+                    select new TaskDTO(t.Id, (t.Title != null ? t.Title : ""), t.AssignedToName,  t.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), t.State)).ToArray();
     }
-    public IReadOnlyCollection<TaskDTO> ReadAllByState(State state) {
-       return from t in _context.tasks
+    
+    public IReadOnlyCollection<TaskDTO> ReadAllByState(State state) 
+    {
+        return (from t in _context.tasks
                     where t.State == state
                     orderby t.Title
-                    select new TaskDTO(t.Id, t.Title, t.AssignedToName, t.Tags, t.State);
+                    select new TaskDTO(t.Id, (t.Title != null ? t.Title : ""), t.AssignedToName, t.Tags.Select(n => n.Name != null ? n.Name : "").ToList(), t.State)).ToArray();
+       
         
     }
     
-    public Response Update(TaskUpdateDTO task) {
+    public Response Update(TaskUpdateDTO task) 
+    {
         var entity = _context.tasks.FirstOrDefault(t => t.Id == task.Id);
         Response response;
-
-        if (entity is null) {
+         
+        if (entity is null) 
+        {
             response = NotFound;
         }
-        else if (_context.tasks.FirstOrDefault(t => t.Title == task.Title && t.Id != task.Id ) != null) {
+        
+        else if (_context.tasks.FirstOrDefault(t => t.Title == task.Title && t.Id != task.Id ) != null) 
+        {
             response = Conflict;
         }
-        else {
+        else 
+        {
             entity.Title = task.Title;
+            entity.StateUpdated = DateTime.UtcNow;
             _context.SaveChanges();
 
             response = Updated;
         }
         return response;
     }
-    public Response Delete(int taskId) {
+    public Response Delete(int taskId) 
+    {
         var task = _context.tasks.Include(t => t.AssignedToName).FirstOrDefault(t => t.Id == taskId);
 
-        Response response;
+        Response response = NotFound;
 
-        if (task is null) {
+        if (task is null){
             response = NotFound;
-        }
-        else if (task.AssignedToName.Any()) {
-            response = Conflict;
-        }
-        else {
+        } 
+        else if (task.State == State.New){
+            
             _context.tasks.Remove(task);
-            _context.SaveChanges();
-
             response = Deleted;
+
+        } else if (task.State == State.Active){
+            
+            task.State = State.Removed;
+            response = Deleted;
+    
+        } else if (task.State == State.Resolved || task.State == State.Closed || task.State == State.Removed){
+            
+            response = Conflict;   
         }
+        _context.SaveChanges();
         return response;
     }
-
+    
 }

@@ -40,6 +40,10 @@ public sealed class TagRepository : ITagRepository
     }
     public TagDTO Read(int tagId)
     {
+        if (tagId == null)
+        {
+            return null;
+        }
         var tags = from t in _context.tags
                    where t.Id == tagId
                    select new TagDTO(t.Id, t.Name);
@@ -74,12 +78,19 @@ public sealed class TagRepository : ITagRepository
     {
         var tag = _context.tags.Include(t => t.Tasks).FirstOrDefault(t => t.Id == tagId);
         Response response;
-
-        if (tag is null)
+        if (tag == null)
         {
             response = Response.NotFound;
         }
-        else if (tag.Tasks.Any())
+        else if (force && tag.Tasks.Any())
+        {
+            _context.tags.Remove(tag);
+            _context.SaveChanges();
+
+            response = Response.Deleted;
+            
+        }
+        else if (!force && tag.Tasks.Any())
         {
             response = Response.Conflict;
         }
