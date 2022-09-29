@@ -80,7 +80,8 @@ public sealed class UserRepository : IUserRepository
         if (force && entity.Tasks.Any())
         {
             _context.users.Remove(entity);
-        } else if(!force && entity.Tasks.Any())
+        }
+        else if (!force && entity.Tasks.Any())
         {
             return Response.Conflict;
         }
