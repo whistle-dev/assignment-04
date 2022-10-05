@@ -1,4 +1,4 @@
-namespace Assignment3.Entities.Tests;
+namespace Assignment4.Entities.Tests;
 
 
 public class UserRepositoryTests

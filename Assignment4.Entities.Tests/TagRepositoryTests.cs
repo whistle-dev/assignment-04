@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-namespace Assignment3.Entities.Tests;
+namespace Assignment4.Entities.Tests;
 
 public sealed class TagRepositoryTests
 {

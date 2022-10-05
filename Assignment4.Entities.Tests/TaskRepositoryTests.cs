@@ -1,4 +1,4 @@
-namespace Assignment3.Entities.Tests;
+namespace Assignment4.Entities.Tests;
 
 public class TaskRepositoryTests
 {
@@ -18,7 +18,7 @@ public class TaskRepositoryTests
         context.tasks.Add(new Task { Id = 3, Title = "Task 3", Description = "Description 3", Created = DateTime.Now, State = State.Active });
         context.tasks.Add(new Task { Id = 4, Title = "Task 4", Description = "Description 4", Created = DateTime.Now, State = State.Closed });
         context.tasks.Add(new Task { Id = 5, Title = "Task 5", Description = "Description 5", Created = DateTime.Now, State = State.Removed });
-        var user = new User {Id = 1, Name = "Jakob Storskov", Email = "jakst@itu.dk"};
+        var user = new User { Id = 1, Name = "Jakob Storskov", Email = "jakst@itu.dk" };
         context.tasks.Add(new Task { Id = 6, Title = "Task 6", Description = "Description 6", Created = DateTime.Now, AssignedToName = user.Name, State = State.New });
         context.tasks.Add(new Task { Id = 7, Title = "Task 7", Description = "Description 7", Created = DateTime.Now, State = State.Active });
         context.users.Add(user);
@@ -86,7 +86,7 @@ public class TaskRepositoryTests
     public void Updating_Task_Should_Set_Stateupdated_To_CurrentTime()
     {
         var task = _repository.Read(7);
-        _repository.Update(new TaskUpdateDTO(task.Id, task.Title, 1, task.Description, new string[] {}, task.State)); //Assigning task 7 to user id 1
+        _repository.Update(new TaskUpdateDTO(task.Id, task.Title, 1, task.Description, new string[] { }, task.State)); //Assigning task 7 to user id 1
         var updatedTask = _repository.Read(task.Id);
         var expectedTime = DateTime.UtcNow;
         updatedTask.StateUpdated.Should().BeCloseTo(expectedTime, precision: TimeSpan.FromSeconds(5));

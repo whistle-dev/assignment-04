@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assignment3.Core\Assignment3.Core.csproj"/>
+    <ProjectReference Include="..\Assignment4.Core\Assignment4.Core.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9"/>

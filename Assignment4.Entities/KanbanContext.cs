@@ -1,4 +1,4 @@
-namespace Assignment3.Entities;
+namespace Assignment4.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class KanbanContext : DbContext
@@ -15,9 +15,9 @@ public class KanbanContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Task>().Property(t => t.State).HasConversion(
-                v => v.ToString(), 
+                v => v.ToString(),
                 v => (State)Enum.Parse(typeof(State), v));
 
-    }    
+    }
 
 }

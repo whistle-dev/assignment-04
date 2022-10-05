@@ -1,21 +1,21 @@
-namespace Assignment3.Entities;
+namespace Assignment4.Entities;
 
 
 public class Task
 {
-    public int Id {get; set; }
+    public int Id { get; set; }
     public DateTime Created;
 
-    public string? AssignedToName {get; set;}
+    public string? AssignedToName { get; set; }
     public DateTime StateUpdated;
     [StringLength(100)]
     [Required]
-    public string? Title{get; set;}
+    public string? Title { get; set; }
     [Required]
     public State State;
     [StringLength(int.MaxValue)]
-    public string? Description{get; set;}
-    public virtual ICollection<Tag> Tags {get; set;}
+    public string? Description { get; set; }
+    public virtual ICollection<Tag> Tags { get; set; }
 
     public Task()
     {
