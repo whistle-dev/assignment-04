@@ -1,7 +1,7 @@
 namespace Assignment4.Entities;
 
 
-public class Task
+public class WorkItem
 {
     public int Id { get; set; }
     public DateTime Created;
@@ -17,12 +17,12 @@ public class Task
     public string? Description { get; set; }
     public virtual ICollection<Tag> Tags { get; set; }
 
-    public Task()
+    public WorkItem()
     {
         this.Tags = new HashSet<Tag>();
     }
 
-    public Task(string title)
+    public WorkItem(string title)
     {
         this.Tags = new HashSet<Tag>();
         Title = title;

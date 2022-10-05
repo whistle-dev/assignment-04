@@ -10,10 +10,10 @@ public class User
     [Required]
     public string? Email { get; set; }
 
-    public Task[] Tasks;
+    public WorkItem[] WorkItems;
 
     public User()
     {
-        Tasks = new Task[0];
+        WorkItems = new WorkItem[0];
     }
 }

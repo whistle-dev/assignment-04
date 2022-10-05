@@ -77,11 +77,11 @@ public sealed class UserRepository : IUserRepository
             return Response.NotFound;
         }
 
-        if (force && entity.Tasks.Any())
+        if (force && entity.WorkItems.Any())
         {
             _context.users.Remove(entity);
         }
-        else if (!force && entity.Tasks.Any())
+        else if (!force && entity.WorkItems.Any())
         {
             return Response.Conflict;
         }

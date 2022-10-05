@@ -16,7 +16,7 @@ public sealed class TagRepositoryTests
         var context = new KanbanContext(builder.Options);
         context.Database.EnsureCreated();
         context.tags.AddRange(new Tag("High") { Id = 1 }, new Tag("Low") { Id = 2 });
-        context.tasks.Add(new Task
+        context.workitems.Add(new WorkItem
         {
             Id = 1,
             Created = DateTime.Now,

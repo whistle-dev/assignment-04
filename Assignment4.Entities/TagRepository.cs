@@ -76,13 +76,13 @@ public sealed class TagRepository : ITagRepository
     }
     public Response Delete(int tagId, bool force = false)
     {
-        var tag = _context.tags.Include(t => t.Tasks).FirstOrDefault(t => t.Id == tagId);
+        var tag = _context.tags.Include(t => t.WorkItems).FirstOrDefault(t => t.Id == tagId);
         Response response;
         if (tag == null)
         {
             response = Response.NotFound;
         }
-        else if (force && tag.Tasks.Any())
+        else if (force && tag.WorkItems.Any())
         {
             _context.tags.Remove(tag);
             _context.SaveChanges();
@@ -90,7 +90,7 @@ public sealed class TagRepository : ITagRepository
             response = Response.Deleted;
 
         }
-        else if (!force && tag.Tasks.Any())
+        else if (!force && tag.WorkItems.Any())
         {
             response = Response.Conflict;
         }

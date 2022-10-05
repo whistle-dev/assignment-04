@@ -6,12 +6,12 @@ public class Tag
     [StringLength(50)]
     [Required]
     public string? Name { get; set; }
-    public virtual ICollection<Task> Tasks { get; set; }
+    public virtual ICollection<WorkItem> WorkItems { get; set; }
 
 
     public Tag(String name)
     {
-        this.Tasks = new HashSet<Task>();
+        this.WorkItems = new HashSet<WorkItem>();
         Name = name;
     }
 

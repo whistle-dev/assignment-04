@@ -10,11 +10,11 @@ public class KanbanContext : DbContext
 
     public virtual DbSet<Tag> tags => Set<Tag>();
     public virtual DbSet<User> users => Set<User>();
-    public virtual DbSet<Task> tasks => Set<Task>();
+    public virtual DbSet<WorkItem> workitems => Set<WorkItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Task>().Property(t => t.State).HasConversion(
+        modelBuilder.Entity<WorkItem>().Property(t => t.State).HasConversion(
                 v => v.ToString(),
                 v => (State)Enum.Parse(typeof(State), v));
 
